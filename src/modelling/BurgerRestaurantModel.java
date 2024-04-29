@@ -1,3 +1,4 @@
+package modelling;
 
 import java.util.concurrent.TimeUnit;
 
@@ -6,6 +7,8 @@ import desmoj.core.simulator.Experiment;
 import desmoj.core.simulator.Model;
 import desmoj.core.simulator.Queue;
 import desmoj.core.simulator.TimeInstant;
+import desmoj.core.simulator.TimeSpan;
+
 import entities.Cliente;
 import entities.Cocinero;
 import entities.Dependiente;
@@ -24,7 +27,6 @@ public class BurgerRestaurantModel extends Model{
     protected Queue<Dependiente> dependientesQ;
     protected Queue<Cocinero> idleCocinerosQ;
 
-
     /**
 	 * Creates a new BurgerRestaurantModel model via calling
 	 * the constructor of the superclass.
@@ -37,42 +39,23 @@ public class BurgerRestaurantModel extends Model{
     public BurgerRestaurantModel(Model owner, String name, boolean showInReport, boolean showInTrace) {
         super(owner, name, showInReport, showInTrace);
     }
-    
 
     /**
     * Returns a description of the model to be used in the report.
     * @return model description as a string
     */
     public String description() {
-        return "This model describes a queueing system located at a "+
-                    "container terminal. Trucks will arrive and "+
-                    "require the loading of a container. A van carrier (VC) is "+
-                    "on duty and will head off to find the required container "+
-                    "in the storage. It will then load the container onto the "+
-                    "truck. Afterwards, the truck leaves the terminal. "+
-                    "In case the VC is busy, the truck waits "+
-                    "for its turn on the parking-lot. "+
-                    "If the VC is idle, it waits on its own parking spot for the "+
-                    "truck to come.";
+        return "This model describes a... Complete this description...";
     }
   
-     /**
-      * Activates dynamic model components (events).
-      *
-      * This method is used to place all events or processes on the
-      * internal event list of the simulator which are necessary to start
-      * the simulation.
-      *
-      * In this case, the truck generator event will have to be
-      * created and scheduled for the start time of the simulation.
-      */
+    //Creates the first event to kickoff the simulation
     public void doInitialSchedules() { 
-    
+        GenClienteEvent genCliente = new GenClienteEvent(this, "Client generator", true);
+
+        genCliente.schedule(new TimeSpan(0.0));
     }
   
-     /**
-      * Initialises static model components like distributions and queues.
-      */
+    // Initialises static model components like distributions and queues.
     public void init() {
         /*
          * Initialize the random number generators for the inter-arrival times and the Queues
@@ -116,32 +99,39 @@ public class BurgerRestaurantModel extends Model{
 	 *
 	 * @return double a llegadaClienteTime sample
 	 */
-    public double getLlegadaClienteT(){
-        return llegadaClienteT.sample();
-    }
-    public double getTomaComandaT(){
-        return tomaComandaT.sample();
-    }
-    public double getPreparaComidaT(){
-        return preparaComidaT.sample();
-    }
+    public double getLlegadaClienteT(){ return llegadaClienteT.sample(); }
+
+    public double getTomaComandaT(){ return tomaComandaT.sample(); }
+
+    public double getPreparaComidaT(){ return preparaComidaT.sample(); }
 
     public static void main(String[] args){
-        BurgerRestaurantModel model = new BurgerRestaurantModel(null, "Burger Restaurant Model", true, true);
-        Experiment exp = new Experiment("Burger Restaurant Experiment", TimeUnit.SECONDS, TimeUnit.MINUTES, null);
-        model.connectToExperiment(exp);
+        Experiment.setEpsilon(java.util.concurrent.TimeUnit.SECONDS);
+		Experiment.setReferenceUnit(java.util.concurrent.TimeUnit.MINUTES);
+
+        Experiment experiment = new Experiment("Burger Restaurant Experiment");
+
+        BurgerRestaurantModel brm_1st_ev_Model = new BurgerRestaurantModel(
+            null,
+            "Vancarrier Model",
+            true,
+            false);
+
+		// connect Experiment and Model
+		brm_1st_ev_Model.connectToExperiment(experiment);
+
+        // set trace
+		experiment.tracePeriod(new TimeInstant(0), new TimeInstant(100));
+
+        // now set the time this simulation should stop at
+		// let him work 1500 Minutes
+		experiment.stop(new TimeInstant(1500));
+		experiment.setShowProgressBar(false);
         
-        // set experiment parameters
-		exp.setShowProgressBar(true);  // display a progress bar (or not)
-		exp.stop(new TimeInstant(1500, TimeUnit.MINUTES));   // set end of simulation at 1500 minutes
-		exp.tracePeriod(new TimeInstant(0), new TimeInstant(100, TimeUnit.MINUTES));  // set the period of the trace
-		exp.debugPeriod(new TimeInstant(0), new TimeInstant(50, TimeUnit.MINUTES));   // and debug output
-			// ATTENTION!
-			// Don't use too long periods. Otherwise a huge HTML page will
-			// be created which crashes Netscape :-)
+		experiment.debugPeriod(new TimeInstant(0), new TimeInstant(50, TimeUnit.MINUTES));   // and debug output
 
 		// start the experiment at simulation time 0.0
-		exp.start();
+		experiment.start();
 
 		// --> now the simulation is running until it reaches its end criterion
 		// ...
@@ -149,9 +139,9 @@ public class BurgerRestaurantModel extends Model{
 		// <-- afterwards, the main thread returns here
 
 		// generate the report (and other output files)
-		exp.report();
+		experiment.report();
 
 		// stop all threads still alive and close all output files
-		exp.finish();
+		experiment.finish();
     }
 }
