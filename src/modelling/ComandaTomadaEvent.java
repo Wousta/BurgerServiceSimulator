@@ -1,21 +1,38 @@
 package modelling;
 
+import java.util.concurrent.TimeUnit;
+
 import co.paralleluniverse.fibers.SuspendExecution;
 import desmoj.core.simulator.Event;
 import desmoj.core.simulator.Model;
+import desmoj.core.simulator.TimeSpan;
+import entities.Cocinero;
 import entities.Dependiente;
 
 public class ComandaTomadaEvent extends Event<Dependiente>{
 
-    public ComandaTomadaEvent(Model arg0, String arg1, boolean arg2) {
-        super(arg0, arg1, arg2);
-        //TODO Auto-generated constructor stub
+    private BurgerRestaurantModel model;
+
+    public ComandaTomadaEvent(Model owner, String name, boolean showInTrace) {
+        super(owner, name, showInTrace);
+        model = (BurgerRestaurantModel) owner;
     }
 
     @Override
-    public void eventRoutine(Dependiente arg0) throws SuspendExecution {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'eventRoutine'");
+    public void eventRoutine(Dependiente dependiente) throws SuspendExecution {
+        
+        model.dependientesQ.insert(dependiente);
+        sendTraceNote("Comanda tomada, Dependiente " + dependiente +  "a la espera de cocinero");
+
+        if(!model.idleCocinerosQ.isEmpty()){
+            Cocinero cocinero = model.idleCocinerosQ.first();
+            model.idleCocinerosQ.remove(cocinero);
+
+            model.dependientesQ.remove(dependiente);
+
+            PedidoCocinadoEvent pedidoCocinado = new PedidoCocinadoEvent(model, "PedidoCocinadoEvent", true);
+            pedidoCocinado.schedule(cocinero, dependiente, new TimeSpan(model.getPreparaComidaT(), TimeUnit.MINUTES));
+        }
     }
 
 }
