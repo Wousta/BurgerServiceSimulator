@@ -23,6 +23,7 @@ public class PedidoCocinadoEvent extends EventOf2Entities<Cocinero,Dependiente>{
             "Se ha cocinado el pedido asignado al dependiente: " + dependiente.getName() + 
             " por el cocinero: " + cocinero.getName()
         );
+        model.idleDependientesQ.insert(dependiente);
 
         if(!model.dependientesQ.isEmpty()){
             Dependiente nextDependiente = model.dependientesQ.first();

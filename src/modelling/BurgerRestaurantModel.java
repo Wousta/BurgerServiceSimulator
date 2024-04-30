@@ -7,8 +7,10 @@ import desmoj.core.simulator.Experiment;
 import desmoj.core.simulator.Model;
 import desmoj.core.simulator.Queue;
 import desmoj.core.simulator.TimeInstant;
+import desmoj.core.simulator.TimeOperations;
 import desmoj.core.simulator.TimeSpan;
-
+import desmoj.core.statistic.Histogram;
+import desmoj.core.statistic.TimeSeries;
 import entities.Cliente;
 import entities.Cocinero;
 import entities.Dependiente;
@@ -17,6 +19,15 @@ public class BurgerRestaurantModel extends Model {
 
     protected static final int NUM_DEPENDIENTES = 3;
     protected static final int NUM_COCINEROS = 1;
+
+	protected TimeSeries clientsArrived;
+    protected TimeSeries clientsServiced;
+	protected Histogram waitTimeHistogram;
+	protected int arrivedClients = 0;
+	protected int servicedClients = 0;
+
+    private TimeInstant startWait;
+	private TimeInstant endWait;
 
     private ContDistExponential llegadaClienteT;
     private ContDistExponential tomaComandaT;
@@ -42,7 +53,10 @@ public class BurgerRestaurantModel extends Model {
      * @param showInTrace  flag to indicate if this model shall produce output to
      *                     the trace file
      */
-    public BurgerRestaurantModel(Model owner, String name, boolean showInReport, boolean showInTrace) {
+    public BurgerRestaurantModel(
+            Model owner, String name, 
+            boolean showInReport, 
+            boolean showInTrace) {
         super(owner, name, showInReport, showInTrace);
     }
 
@@ -64,6 +78,10 @@ public class BurgerRestaurantModel extends Model {
 
     // Initialises static model components like distributions and queues.
     public void init() {
+        clientsArrived = new TimeSeries(this, "arrived", new TimeInstant(0), new TimeInstant(1500), true, false);
+        clientsServiced = new TimeSeries(this, "finished", new TimeInstant(0), new TimeInstant(1500), true, false);
+        waitTimeHistogram = new Histogram(this, "Client Wait Times", 0, 16, 10, true, false);
+
         /*
          * Initialize the random number generators for the inter-arrival times and the
          * Queues
@@ -141,7 +159,7 @@ public class BurgerRestaurantModel extends Model {
         brm_1st_ev_Model.connectToExperiment(experiment);
 
         // set trace
-        experiment.tracePeriod(new TimeInstant(0), new TimeInstant(100));
+        experiment.tracePeriod(new TimeInstant(0), new TimeInstant(150));
 
         // now set the time this simulation should stop at
         // let him work 1500 Minutes
@@ -164,4 +182,15 @@ public class BurgerRestaurantModel extends Model {
         // stop all threads still alive and close all output files
         experiment.finish();
     }
+
+    public void endWait() {
+		endWait = presentTime();
+	}
+	
+	public double getWaitTime() {
+		if (startWait != null && endWait != null) 
+			return TimeOperations.diff(startWait, endWait).getTimeAsDouble();
+		else
+			return Double.NaN;
+	}
 }

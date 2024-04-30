@@ -23,6 +23,7 @@ public class LlegaClienteEvent extends Event<Cliente>{
         sendTraceNote("Cliente llega al restaurante: " + model.clientesQ.length() + " clientes en cola");
         
         if(!model.idleDependientesQ.isEmpty()) {
+            sendTraceNote("CLIENTE_LLEGA_EV:idle dependiente");
             Dependiente dependiente = model.idleDependientesQ.first();
             model.idleDependientesQ.remove(dependiente);
 

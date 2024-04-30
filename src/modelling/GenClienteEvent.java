@@ -21,6 +21,8 @@ public class GenClienteEvent extends ExternalEvent {
 
         // Schedule this event again
         schedule(new TimeSpan(model.getLlegaClienteT(), TimeUnit.MINUTES));
+
+        model.clientsArrived.update(++model.arrivedClients);
     }
 
 }
