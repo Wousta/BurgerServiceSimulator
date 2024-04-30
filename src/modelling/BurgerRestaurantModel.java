@@ -105,7 +105,7 @@ public class BurgerRestaurantModel extends Model {
 
         clientesQ = new Queue<>(this, "Clientes Queue", true, true);
         idleDependientesQ = new Queue<>(this, "Idle Dependientes Queue", true, true);
-        dependientesQ = new Queue<>(this, "Dependientes Queue", true, true);
+        dependientesQ = new Queue<>(this, "Dependientes con comanda Queue", true, true);
         idleCocinerosQ = new Queue<>(this, "Idle Cocineros Queue", true, true);
 
         // create and insert the Dependientes and Cocineros into the idle queues
@@ -159,7 +159,7 @@ public class BurgerRestaurantModel extends Model {
         brm_1st_ev_Model.connectToExperiment(experiment);
 
         // set trace
-        experiment.tracePeriod(new TimeInstant(0), new TimeInstant(150));
+        experiment.tracePeriod(new TimeInstant(0), new TimeInstant(200));
 
         // now set the time this simulation should stop at
         // let him work 1500 Minutes

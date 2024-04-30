@@ -28,7 +28,7 @@ public class ComandaTomadaEvent extends Event<Dependiente>{
             Cocinero cocinero = model.idleCocinerosQ.first();
             model.idleCocinerosQ.remove(cocinero);
 
-            model.dependientesQ.remove(dependiente);
+            //model.dependientesQ.remove(dependiente);
 
             PedidoCocinadoEvent pedidoCocinado = new PedidoCocinadoEvent(model, "PedidoCocinadoEvent", true);
             pedidoCocinado.schedule(cocinero, dependiente, new TimeSpan(model.getPreparaComidaT(), TimeUnit.MINUTES));

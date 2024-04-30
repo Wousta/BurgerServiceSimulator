@@ -23,21 +23,23 @@ public class PedidoCocinadoEvent extends EventOf2Entities<Cocinero,Dependiente>{
             "Se ha cocinado el pedido asignado al dependiente: " + dependiente.getName() + 
             " por el cocinero: " + cocinero.getName()
         );
-        model.idleDependientesQ.insert(dependiente);
+
+        model.dependientesQ.remove(dependiente);
+        ComidaPagadaEvent comidaPagada = new ComidaPagadaEvent(model, "ComidaPagadaEvent", true);
 
         if(!model.dependientesQ.isEmpty()){
             Dependiente nextDependiente = model.dependientesQ.first();
-            model.dependientesQ.remove(nextDependiente);
+            //model.dependientesQ.remove(nextDependiente);
 
-            ComidaPagadaEvent comidaPagada = new ComidaPagadaEvent(model, "ComidaPagadaEvent", true);
             PedidoCocinadoEvent pedidoCocinado = new PedidoCocinadoEvent(model, "PedidoCocinadoEvent", true);
 
             comidaPagada.schedule(dependiente, new TimeSpan(model.getPagaComidaT(), TimeUnit.MINUTES));
             pedidoCocinado.schedule(cocinero, nextDependiente, new TimeSpan(model.getPreparaComidaT(), TimeUnit.MINUTES));
         }
         else {
+            comidaPagada.schedule(dependiente, new TimeSpan(model.getPagaComidaT(), TimeUnit.MINUTES));
             model.idleCocinerosQ.insert(cocinero);
-        }        
+        }      
     }
 
 }

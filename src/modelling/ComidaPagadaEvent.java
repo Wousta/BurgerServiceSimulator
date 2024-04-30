@@ -34,7 +34,8 @@ public class ComidaPagadaEvent extends Event<Dependiente>{
             sendTraceNote("COMIDA_PAGADA_EV: la cola clientes no esta vacia");
             Cliente cliente = model.clientesQ.first();
             model.clientesQ.remove(cliente);
-            dependiente.releaseCliente();
+
+            dependiente.setClienteAsignado(cliente);
 
             ComandaTomadaEvent comandaTomada = new ComandaTomadaEvent(model, "ComandaTomadaEvent", true);
 
