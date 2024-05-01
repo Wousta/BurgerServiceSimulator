@@ -20,11 +20,16 @@ public class PCocinadoEv extends EventOf2Entities<Cocinero,Dependiente>{
 
     @Override
     public void eventRoutine(Cocinero cocinero, Dependiente dependiente) {
-        sendTraceNote(
+        if(dependiente.getClienteAsignado() == null) {
+            sendTraceNote("ALERT!!! NULL client is going to pay");
+        }
+        else {
+            sendTraceNote(
             "Se ha cocinado el pedido asignado al dependiente: " 
             + dependiente.getName() 
             + " por el cocinero: " 
             + cocinero.getName());
+        }
 
         model.dependientesQ.remove(dependiente);
         CPagadaEv comidaPagada = new CPagadaEv(

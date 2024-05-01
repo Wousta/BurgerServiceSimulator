@@ -47,6 +47,7 @@ public class CPagadaEv extends Event<Dependiente>{
         }
         else {
             sendTraceNote("!COMIDA_PAGADA_EV: la cola clientes esta vacia");
+            dependiente.releaseCliente();
             model.idleDependientesQ.insert(dependiente);
         }
 

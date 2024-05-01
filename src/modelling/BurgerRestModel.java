@@ -54,7 +54,8 @@ public class BurgerRestModel extends Model {
      *                     the trace file
      */
     public BurgerRestModel(
-            Model owner, String name, 
+            Model owner, 
+            String name, 
             boolean showInReport, 
             boolean showInTrace) {
         super(owner, name, showInReport, showInTrace);
@@ -158,13 +159,13 @@ public class BurgerRestModel extends Model {
 
         BurgerRestModel burgerRestModel = new BurgerRestModel(
             null,
-            "Vancarrier Model",
+            "Burger Restaurant Model",
             true,
             false
         );
 
         burgerRestModel.connectToExperiment(experiment);
-        experiment.tracePeriod(new TimeInstant(0), new TimeInstant(200));
+        experiment.tracePeriod(new TimeInstant(0), new TimeInstant(300));
         experiment.stop(new TimeInstant(1500));
         experiment.setShowProgressBar(false);
         experiment.debugPeriod(new TimeInstant(0), new TimeInstant(50, TimeUnit.MINUTES)); // and debug output
