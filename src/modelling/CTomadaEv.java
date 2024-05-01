@@ -11,11 +11,11 @@ import entities.Cocinero;
 import entities.Dependiente;
 
 public class CTomadaEv extends Event<Dependiente>{
-    private BurgerRestaurantModel model;
+    private BurgerRestModel model;
 
     public CTomadaEv(Model owner, String name, boolean showInTrace) {
         super(owner, name, showInTrace);
-        model = (BurgerRestaurantModel) owner;
+        model = (BurgerRestModel) owner;
     }
 
     @Override

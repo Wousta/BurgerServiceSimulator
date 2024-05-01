@@ -9,11 +9,11 @@ import desmoj.core.simulator.TimeSpan;
 import entities.Cliente;
 
 public class GenCliEv extends ExternalEvent {
-    private BurgerRestaurantModel model;
+    private BurgerRestModel model;
 
     public GenCliEv(Model owner, String name, boolean showInTrace) {
         super(owner, name, showInTrace);
-        model = (BurgerRestaurantModel)owner;
+        model = (BurgerRestModel)owner;
     }
 
     @Override

@@ -10,11 +10,11 @@ import entities.Cliente;
 import entities.Dependiente;
 
 public class LlegaCliEv extends Event<Cliente>{
-    private BurgerRestaurantModel model;
+    private BurgerRestModel model;
 
     public LlegaCliEv(Model owner, String name, boolean showInTrace) {
         super(owner, name, showInTrace);
-        model = (BurgerRestaurantModel)owner;
+        model = (BurgerRestModel)owner;
     }
 
     @Override

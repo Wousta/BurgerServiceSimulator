@@ -11,11 +11,11 @@ import entities.Dependiente;
 
 public class PCocinadoEv extends EventOf2Entities<Cocinero,Dependiente>{
 
-    private BurgerRestaurantModel model;
+    private BurgerRestModel model;
 
     public PCocinadoEv(Model owner, String name, boolean showInTrace) {
         super(owner, name, showInTrace);
-        model = (BurgerRestaurantModel) owner;
+        model = (BurgerRestModel) owner;
     }
 
     @Override

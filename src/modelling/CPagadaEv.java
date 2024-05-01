@@ -11,11 +11,11 @@ import entities.Cliente;
 import entities.Dependiente;
 
 public class CPagadaEv extends Event<Dependiente>{
-    private BurgerRestaurantModel model;
+    private BurgerRestModel model;
 
     public CPagadaEv(Model owner, String name, boolean showInTrace) {
         super(owner, name, showInTrace);
-        model = (BurgerRestaurantModel) owner;
+        model = (BurgerRestModel) owner;
     }
 
     @Override

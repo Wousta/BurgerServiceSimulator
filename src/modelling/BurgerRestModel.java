@@ -15,7 +15,7 @@ import entities.Cliente;
 import entities.Cocinero;
 import entities.Dependiente;
 
-public class BurgerRestaurantModel extends Model {
+public class BurgerRestModel extends Model {
 
     protected static final int NUM_DEPENDIENTES = 2;
     protected static final int NUM_COCINEROS = 3;
@@ -53,7 +53,7 @@ public class BurgerRestaurantModel extends Model {
      * @param showInTrace  flag to indicate if this model shall produce output to
      *                     the trace file
      */
-    public BurgerRestaurantModel(
+    public BurgerRestModel(
             Model owner, String name, 
             boolean showInReport, 
             boolean showInTrace) {
@@ -156,7 +156,7 @@ public class BurgerRestaurantModel extends Model {
 
         Experiment experiment = new Experiment("Burger Restaurant Experiment");
 
-        BurgerRestaurantModel burgerRestModel = new BurgerRestaurantModel(
+        BurgerRestModel burgerRestModel = new BurgerRestModel(
             null,
             "Vancarrier Model",
             true,
