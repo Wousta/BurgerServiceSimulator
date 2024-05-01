@@ -4,7 +4,6 @@ import desmoj.core.simulator.Entity;
 import desmoj.core.simulator.Model;
 
 public class Cliente extends Entity{
-
     /**
 	 * Constructor of the truck entity.
 	 *
