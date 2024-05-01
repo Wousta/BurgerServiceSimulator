@@ -5,14 +5,14 @@ import java.util.concurrent.TimeUnit;
 import desmoj.core.simulator.Event;
 import desmoj.core.simulator.Model;
 import desmoj.core.simulator.TimeSpan;
+
 import entities.Cliente;
 import entities.Dependiente;
 
-public class LlegaClienteEvent extends Event<Cliente>{
-
+public class LlegaCliEv extends Event<Cliente>{
     private BurgerRestaurantModel model;
 
-    public LlegaClienteEvent(Model owner, String name, boolean showInTrace) {
+    public LlegaCliEv(Model owner, String name, boolean showInTrace) {
         super(owner, name, showInTrace);
         model = (BurgerRestaurantModel)owner;
     }
@@ -23,17 +23,18 @@ public class LlegaClienteEvent extends Event<Cliente>{
         sendTraceNote("Cliente llega al restaurante: " + model.clientesQ.length() + " clientes en cola");
         
         if(!model.idleDependientesQ.isEmpty()) {
-            sendTraceNote("CLIENTE_LLEGA_EV:idle dependiente");
             Dependiente dependiente = model.idleDependientesQ.first();
+            CTomadaEv comandaTomada = new CTomadaEv(
+                model, 
+                "ComandaTomadaEvent", 
+                true);
+
             model.idleDependientesQ.remove(dependiente);
-
             dependiente.setClienteAsignado(cliente);
-
             model.clientesQ.remove(cliente);
-
-            ComandaTomadaEvent comandaTomada = new ComandaTomadaEvent(model, "ComandaTomadaEvent", true);
-
-            comandaTomada.schedule(dependiente, new TimeSpan(model.getTomaComandaT(), TimeUnit.MINUTES));
+            comandaTomada.schedule(
+                dependiente, 
+                new TimeSpan(model.getTomaComandaT(), TimeUnit.MINUTES));
         }
     }
 }

@@ -17,8 +17,8 @@ import entities.Dependiente;
 
 public class BurgerRestaurantModel extends Model {
 
-    protected static final int NUM_DEPENDIENTES = 3;
-    protected static final int NUM_COCINEROS = 1;
+    protected static final int NUM_DEPENDIENTES = 2;
+    protected static final int NUM_COCINEROS = 3;
 
 	protected TimeSeries clientsArrived;
     protected TimeSeries clientsServiced;
@@ -71,7 +71,10 @@ public class BurgerRestaurantModel extends Model {
 
     // Creates the first event to kickoff the simulation
     public void doInitialSchedules() {
-        GenClienteEvent genCliente = new GenClienteEvent(this, "Client generator", true);
+        GenCliEv genCliente = new GenCliEv(
+            this, 
+            "Client generator", 
+            true);
 
         genCliente.schedule(new TimeSpan(0.0));
     }
@@ -83,8 +86,7 @@ public class BurgerRestaurantModel extends Model {
         waitTimeHistogram = new Histogram(this, "Client Wait Times", 0, 16, 10, true, false);
 
         /*
-         * Initialize the random number generators for the inter-arrival times and the
-         * Queues
+         * Initialize the random number generators for the inter-arrival times and the Queues
          * Parameters:
          * Model = the model this distribution is associated with
          * String = this distribution's name
@@ -110,12 +112,18 @@ public class BurgerRestaurantModel extends Model {
 
         // create and insert the Dependientes and Cocineros into the idle queues
         for (int i = 0; i < NUM_DEPENDIENTES; i++) {
-            Dependiente dependiente = new Dependiente(this, "Dependiente", true);
+            Dependiente dependiente = new Dependiente(
+                this, 
+                "Dependiente", 
+                true);
             idleDependientesQ.insert(dependiente);
         }
 
         for (int i = 0; i < NUM_COCINEROS; i++) {
-            Cocinero cocinero = new Cocinero(this, "Cocinero", true);
+            Cocinero cocinero = new Cocinero(
+                this, 
+                "Cocinero", 
+                true);
             idleCocinerosQ.insert(cocinero);
         }
     }
@@ -143,42 +151,28 @@ public class BurgerRestaurantModel extends Model {
     }
 
     public static void main(String[] args) {
-        Experiment.setEpsilon(java.util.concurrent.TimeUnit.SECONDS);
-        Experiment.setReferenceUnit(java.util.concurrent.TimeUnit.MINUTES);
+        Experiment.setEpsilon(TimeUnit.SECONDS);
+        Experiment.setReferenceUnit(TimeUnit.MINUTES);
 
         Experiment experiment = new Experiment("Burger Restaurant Experiment");
 
-        BurgerRestaurantModel brm_1st_ev_Model = new BurgerRestaurantModel(
+        BurgerRestaurantModel burgerRestModel = new BurgerRestaurantModel(
             null,
             "Vancarrier Model",
             true,
             false
         );
 
-        // connect Experiment and Model
-        brm_1st_ev_Model.connectToExperiment(experiment);
-
-        // set trace
+        burgerRestModel.connectToExperiment(experiment);
         experiment.tracePeriod(new TimeInstant(0), new TimeInstant(200));
-
-        // now set the time this simulation should stop at
-        // let him work 1500 Minutes
         experiment.stop(new TimeInstant(1500));
         experiment.setShowProgressBar(false);
-
         experiment.debugPeriod(new TimeInstant(0), new TimeInstant(50, TimeUnit.MINUTES)); // and debug output
 
-        // start the experiment at simulation time 0.0
         experiment.start();
-
         // --> now the simulation is running until it reaches its end criterion
-        // ...
-        // ...
         // <-- afterwards, the main thread returns here
-
-        // generate the report (and other output files)
         experiment.report();
-
         // stop all threads still alive and close all output files
         experiment.finish();
     }
