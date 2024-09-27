@@ -20,14 +20,14 @@ public class BurgerRestModel extends Model {
     protected static final int NUM_DEPENDIENTES = 2;
     protected static final int NUM_COCINEROS = 3;
 
-	protected TimeSeries clientsArrived;
+    protected TimeSeries clientsArrived;
     protected TimeSeries clientsServiced;
-	protected Histogram waitTimeHistogram;
-	protected int arrivedClients = 0;
-	protected int servicedClients = 0;
+    protected Histogram waitTimeHistogram;
+    protected int arrivedClients = 0;
+    protected int servicedClients = 0;
 
     private TimeInstant startWait;
-	private TimeInstant endWait;
+    private TimeInstant endWait;
 
     private ContDistExponential llegadaClienteT;
     private ContDistExponential tomaComandaT;
@@ -95,14 +95,14 @@ public class BurgerRestModel extends Model {
         waitTimeHistogram = new Histogram(this, "Client Wait Times", 0, 16, 10, true, false);
 
         /*
-         * Initialize the random number generators for the inter-arrival times and the Queues
-         * Parameters:
-         * Model = the model this distribution is associated with
-         * String = this distribution's name
-         * double = the mean inter-arrival time
-         * boolean = show in report?
-         * boolean = show in trace?
-         */
+            * Initialize the random number generators for the inter-arrival times and the Queues
+            * Parameters:
+            * Model = the model this distribution is associated with
+            * String = this distribution's name
+            * double = the mean inter-arrival time
+            * boolean = show in report?
+            * boolean = show in trace?
+            */
         llegadaClienteT = new ContDistExponential(this, "Llegada Cliente Time", 5.0, true, false);
         tomaComandaT = new ContDistExponential(this, "Toma Comanda Time", 4.0, true, false);
         preparaComidaT = new ContDistExponential(this, "Prepara Comida Time", 7.0, true, false);
@@ -187,13 +187,13 @@ public class BurgerRestModel extends Model {
     }
 
     public void endWait() {
-		endWait = presentTime();
-	}
-	
-	public double getWaitTime() {
-		if (startWait != null && endWait != null) 
-			return TimeOperations.diff(startWait, endWait).getTimeAsDouble();
-		else
-			return Double.NaN;
-	}
+        endWait = presentTime();
+    }
+
+    public double getWaitTime() {
+        if (startWait != null && endWait != null) 
+            return TimeOperations.diff(startWait, endWait).getTimeAsDouble();
+        else
+            return Double.NaN;
+    }
 }
